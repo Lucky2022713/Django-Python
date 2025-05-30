@@ -1,0 +1,15 @@
+{% extends 'resort/base.html' %}
+
+{% block title %}Book Room{% endblock %}
+
+{% block content %}
+<h1>Book Room: {{ room.room_type.name }}</h1>
+<p><strong>Price per Night:</strong> ${{ room.price }}</p>
+<p><strong>Description:</strong> {{ room.description }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+</form>
+{% endblock %}

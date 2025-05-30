@@ -1,0 +1,42 @@
+{% extends 'resort/base.html' %}
+{% load static %}
+
+{% block title %}Room List{% endblock %}
+
+{% block content %}
+<h1>Room List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Room Type</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room.room_type.name }}</td>
+            <td>${{ room.price }}</td>
+            <td>{{ room.description }}</td>
+            <td>
+                {% if room.image %}
+                <img src="{{ room.image.url }}" alt="{{ room.room_type }}" width="100">
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>
+                <form method="post" action="{% url 'booking_form' room.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm">BOOK NOW</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

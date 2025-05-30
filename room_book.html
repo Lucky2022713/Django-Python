@@ -1,0 +1,32 @@
+<!-- filepath: c:\Users\User\Music\resort_booking_system\resort\templates\resort\room_book.html -->
+{% extends 'resort/base.html' %}
+
+{% block content %}
+<h1>Book Room: {{ room.room_type.name }}</h1>
+<p>Price per Night: ${{ room.price }}</p>
+<p>Description: {{ room.description }}</p>
+<p>Capacity: {{ room.room_type.capacity }} guests</p>
+
+<form method="post" action="{% url 'booking_create' room.id %}">
+    {% csrf_token %}
+    <!-- Check-in Date -->
+    <div class="mb-3">
+        <label for="check_in_date" class="form-label"><strong>Check-in Date:</strong></label>
+        <input type="date" name="check_in_date" id="check_in_date" class="form-control" required>
+    </div>
+
+    <!-- Check-out Date -->
+    <div class="mb-3">
+        <label for="check_out_date" class="form-label"><strong>Check-out Date:</strong></label>
+        <input type="date" name="check_out_date" id="check_out_date" class="form-control" required>
+    </div>
+
+    <!-- Guests -->
+    <div class="mb-3">
+        <label for="guests" class="form-label"><strong>Guests:</strong></label>
+        <input type="number" name="guests" id="guests" class="form-control" min="1" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+</form>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'resort/base.html' %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg mb-4">
+    <h1 class="display-4">Welcome to Blue Lagoon Resort</h1>
+    <p class="lead">Iligan Paradise Resort is a getaway for relaxation and adventure, far away from the hustle and bustle of city life..</p>
+    <hr class="my-4">
+</div>
+
+<h2 class="mb-4">Our Room Types</h2>
+<div class="row">
+    {% for room_type in room_types %}
+    <div class="col-md-4 mb-4">
+        <div class="card room-card h-100">
+            {% if room_type.image %}
+            <img src="{{ room_type.image.url }}" class="card-img-top" alt="{{ room_type.name }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ room_type.name }}</h5>
+                <p class="card-text">{{ room_type.description|truncatewords:20 }}</p>
+                <p class="text-muted">${{ room_type.price_per_night }} per night</p>
+                <p class="text-muted">Capacity: {{ room_type.capacity }} guests</p>
+            </div>
+            <div class="card-footer bg-white">
+                {% if user.is_authenticated %}
+                <a href="{% url 'room_list' %}?type={{ room_type.id }}" class="btn btn-sm btn-outline-primary">BOOK NOW</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary">BOOK NOW</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

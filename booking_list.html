@@ -1,0 +1,57 @@
+{% extends 'resort/base.html' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">My Bookings</h1>
+
+{% if bookings %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Guests</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.id }}</td>
+                <td>Room {{ booking.room.room_number }} ({{ booking.room.room_type.name }})</td>
+                <td>{{ booking.check_in_date }}</td>
+                <td>{{ booking.check_out_date }}</td>
+                <td>{{ booking.guests }}</td>
+                <td>${{ booking.total_price }}</td>
+                <td>
+                    {% if booking.is_cancelled %}
+                        <span class="badge bg-danger">Cancelled</span>
+                    {% elif booking.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% elif booking.check_in_date > today %}
+                        <span class="badge bg-primary">Upcoming</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Completed</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'booking_detail' booking.id %}" class="btn btn-sm btn-info">View</a>
+                    {% if not booking.is_cancelled and booking.check_in_date > today %}
+                    <a href="{% url 'booking_cancel' booking.id %}" class="btn btn-sm btn-warning">Cancel</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">You have no bookings yet.</div>
+{% endif %}
+{% endblock %}

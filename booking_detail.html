@@ -1,0 +1,77 @@
+{% extends 'resort/base.html' %}
+
+{% block title %}Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>Booking #{{ booking.id }}</h1>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Booking Details</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Room:</strong> Room {{ booking.room.room_number }} ({{ booking.room.room_type.name }})
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Check-in:</strong> {{ booking.check_in_date }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Check-out:</strong> {{ booking.check_out_date }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Guests:</strong> {{ booking.guests }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Total Price:</strong> ${{ booking.total_price }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Status:</strong>
+                        {% if booking.is_cancelled %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% elif booking.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% elif booking.check_in_date > today %}
+                            <span class="badge bg-primary">Upcoming</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Completed</span>
+                        {% endif %}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Booked on:</strong> {{ booking.created_at }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Actions</h5>
+                <a href="{% url 'booking_list' %}" class="btn btn-secondary w-100 mb-2">Back to List</a>
+                
+                {% if not booking.is_cancelled and booking.check_in_date > today %}
+                <a href="{% url 'booking_cancel' booking.id %}" class="btn btn-warning w-100">Cancel Booking</a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Room Information</h5>
+                {% if booking.room.image %}
+                <img src="{{ booking.room.image.url }}" alt="{{ booking.room.room_type.name }}" class="img-fluid mb-3">
+                {% else %}
+                <p>No image available for this room.</p>
+                {% endif %}
+                <p><strong>Type:</strong> {{ booking.room.room_type.name }}</p>
+                <p><strong>Description:</strong> {{ booking.room.room_type.description }}</p>
+                <p><strong>Capacity:</strong> {{ booking.room.room_type.capacity }} guests</p>
+                <a href="{% url 'room_detail' booking.room.id %}" class="btn btn-sm btn-outline-primary">View Room</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
